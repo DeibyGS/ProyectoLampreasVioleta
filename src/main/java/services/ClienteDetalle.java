@@ -5,7 +5,7 @@ import dao.DetalleClienteDAO;
 import model.Cliente;
 import model.DetalleCliente;
 
-public class ClienteDetalle {
+/*public class ClienteDetalle {
 
     private final ClienteDAO clienteDAO= new ClienteDAO();
     private final DetalleClienteDAO detalleClienteDAO= new DetalleClienteDAO();
@@ -26,3 +26,4 @@ public class ClienteDetalle {
 
     }
 }
+*/
