@@ -8,10 +8,7 @@ import db.Db;
 import model.Cliente;
 // Modelo/entidad Cliente. Representa una fila de la tabla 'cliente'.
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 // Imports necesarios para el uso del API JDBC de Java.
 
 import java.util.ArrayList;
@@ -27,27 +24,21 @@ public class ClienteDAO {
     // ----------------------------------------------------------
 
     private static final String INSERT_SQL =
-            "INSERT INTO cliente (id, nombre, email) VALUES (?, ?, ?)";
+            "INSERT INTO cliente (id, nombre, email,id_comercial) VALUES (?, ?, ?,?)";
     // Consulta SQL para insertar un cliente.
     // Usamos ? para parámetros → evita SQL injection y mejora rendimiento con sentencias preparadas.
 
     private static final String SELECT_BY_ID_SQL =
-            "SELECT id, nombre, email FROM cliente WHERE id = ?";
+            "SELECT id, nombre, email, id_comercial FROM cliente WHERE id = ?";
     // Consulta SQL para buscar un cliente por su ID.
 
     private static final String SELECT_ALL_SQL =
-            "SELECT id, nombre, email FROM cliente ORDER BY id";
+            "SELECT id, nombre, email, id_comercial FROM cliente ORDER BY id";
     // Consulta SQL para obtener todos los clientes ordenados por id.
 
 
-    private static final String SEARCH_SQL = """
-                    SELECT id, nombre, email
-                    FROM cliente
-                    WHERE CAST(id AS TEXT) ILIKE ? 
-                        OR nombre ILIKE ?  
-                        OR email ILIKE ?
-                    ORDER BY id                    
-                    """;
+    private static final String SEARCH_SQL = "SELECT id, nombre, email, id_comercial FROM cliente WHERE CAST(id AS CHAR) LIKE ? OR nombre LIKE ? OR email LIKE ? ORDER BY id";
+
 
 
     // ----------------------------------------------------------
@@ -59,7 +50,7 @@ public class ClienteDAO {
         // Recibe un objeto Cliente y lanza SQLException si algo sale mal.
 
         try (Connection con = Db.getConnection();
-             PreparedStatement ps = con.prepareStatement(INSERT_SQL)) {
+             PreparedStatement ps = con.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
 
             // try-with-resources: la conexión y el PreparedStatement se cerrarán automáticamente
             // al final del bloque, aunque haya errores.
@@ -67,6 +58,7 @@ public class ClienteDAO {
             ps.setInt(1, c.getId());         // Parámetro 1 → columna id
             ps.setString(2, c.getNombre());  // Parámetro 2 → columna nombre
             ps.setString(3, c.getEmail());   // Parámetro 3 → columna email
+            ps.setInt(4, c.getIdComercial());
 
             ps.executeUpdate();
             // Ejecuta la sentencia. Como es un INSERT, no devuelve ResultSet.
@@ -88,6 +80,7 @@ public class ClienteDAO {
             ps.setInt(1, c.getId());
             ps.setString(2, c.getNombre());
             ps.setString(3, c.getEmail());
+            ps.setInt(4, c.getIdComercial());
             ps.executeUpdate();
         }
     }
@@ -114,7 +107,8 @@ public class ClienteDAO {
                     return new Cliente(
                             rs.getInt("id"),          // Columna 'id'
                             rs.getString("nombre"),   // Columna 'nombre'
-                            rs.getString("email")     // Columna 'email'
+                            rs.getString("email"),     // Columna 'email'
+                            rs.getInt("id_comercial")
                     );
                 }
 
@@ -146,7 +140,8 @@ public class ClienteDAO {
                 Cliente c = new Cliente(
                         rs.getInt("id"),
                         rs.getString("nombre"),
-                        rs.getString("email")
+                        rs.getString("email"),
+                        rs.getInt("id_comercial")
                 );
 
                 out.add(c);   // Añadimos el cliente a la lista.
@@ -165,6 +160,7 @@ public class ClienteDAO {
             pst.setString(1, patron);
             pst.setString(2, patron);
             pst.setString(3, patron);
+            pst.setString(4, patron);
 
             List<Cliente> out = new ArrayList<>();
 
@@ -183,7 +179,8 @@ public class ClienteDAO {
         Cliente c = new Cliente(
                 rs.getInt("id"),
                 rs.getString("nombre"),
-                rs.getString("email")
+                rs.getString("email"),
+                rs.getInt("id_comercial")
         );
 
         return c;

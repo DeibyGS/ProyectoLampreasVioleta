@@ -19,7 +19,7 @@ public class DetallePedidoDAO {
 
     private static final String INSERT_SQL =
             """
-            INSERT INTO ldetalle_pedido
+            INSERT INTO detalle_pedido
             (pedido_id, producto_id, cantidad, precio_unit)
             VALUES (?, ?, ?, ?)
             """;
@@ -38,6 +38,10 @@ public class DetallePedidoDAO {
             WHERE pedido_id = ?
             ORDER BY producto_id
             """;
+
+    private static final String DELETE_SQL =
+            "DELETE FROM detalle_pedido WHERE pedido_id = ? AND producto_id = ?";
+
 
     // ===============================
     // CRUD BÁSICO
@@ -104,5 +108,16 @@ public class DetallePedidoDAO {
                 rs.getInt("cantidad"),
                 rs.getDouble("precio_unit")
         );
+    }
+
+
+    public int deleteById(int pedidoId,int productoId) throws SQLException {
+        try (Connection con = Db.getConnection();
+             PreparedStatement pst = con.prepareStatement(DELETE_SQL)) {
+
+            pst.setInt(1, pedidoId);
+            pst.setInt(2, productoId);
+            return pst.executeUpdate();
+        }
     }
 }

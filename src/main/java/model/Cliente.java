@@ -14,15 +14,17 @@ public class Cliente {
     private String nombre;
     private String email;
 
+    private Integer idComercial;
+
     // 1:1
     private DetalleCliente detalle; // puede ser null si aún no hay detalle
 
     // 1:N
     private List<Pedido> pedidos = new ArrayList<>();
 
-    public Cliente() {}
-    public Cliente(Integer id, String nombre, String email) {
-        this.id = id; this.nombre = nombre; this.email = email;
+    public Cliente() {};
+    public Cliente(Integer id, String nombre, String email,Integer idComercial) {
+        this.id = id; this.nombre = nombre; this.email = email;this.idComercial = idComercial;
     }
 
     public Integer getId() { return id; }
@@ -33,6 +35,10 @@ public class Cliente {
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
+    public Integer getIdComercial() { return idComercial; };
+    public void setIdComercial(Integer idComercial) {
+        this.idComercial = idComercial;
+    }
 
     public DetalleCliente getDetalle() { return detalle; }
     public void setDetalle(DetalleCliente detalle) { this.detalle = detalle; }
@@ -40,7 +46,14 @@ public class Cliente {
     public List<Pedido> getPedidos() { return pedidos; }
     public void setPedidos(List<Pedido> pedidos) { this.pedidos = pedidos; }
 
-    @Override public String toString() {
-        return "Cliente{id=%d, nombre='%s', email='%s'}".formatted(id, nombre, email);
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", idComercial=" + idComercial +
+                '}';
     }
+
 }

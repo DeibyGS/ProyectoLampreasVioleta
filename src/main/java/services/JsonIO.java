@@ -3,6 +3,7 @@ package services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +17,10 @@ public final class JsonIO {
 
     // ObjectMapper es el motor de Jackson: convierte Java <-> JSON
     private static final ObjectMapper MAPPER = new ObjectMapper()
-            .enable(SerializationFeature.INDENT_OUTPUT); // JSON "bonito" (pretty print)
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT);// JSON "bonito" (pretty print)
+
 
     private JsonIO() { }
 

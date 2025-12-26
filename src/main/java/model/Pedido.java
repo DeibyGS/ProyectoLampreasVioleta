@@ -13,12 +13,14 @@ public class Pedido {
     private Integer clienteId;         // FK a Cliente (lado N de 1:N)
     private LocalDate fecha;
 
+    private Integer idRepartidor;
+
     // N:M mediante filas en la tabla detalle_pedido
     private List<DetallePedido> lineas = new ArrayList<>();
 
     public Pedido() {}
-    public Pedido(Integer id, Integer clienteId, LocalDate fecha) {
-        this.id = id; this.clienteId = clienteId; this.fecha = fecha;
+    public Pedido(Integer id, Integer clienteId, LocalDate fecha, Integer idRepartidor) {
+        this.id = id; this.clienteId = clienteId; this.fecha = fecha; this.idRepartidor = idRepartidor;
     }
 
     public Integer getId() { return id; }
@@ -30,6 +32,11 @@ public class Pedido {
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 
+    public Integer getIdRepartidor() { return idRepartidor; }
+    public void setIdRepartidor(Integer idRepartidor) {
+        this.idRepartidor = idRepartidor;
+    }
+
     public List<DetallePedido> getLineas() { return lineas; }
     public void setLineas(List<DetallePedido> lineas) { this.lineas = lineas; }
 
@@ -37,8 +44,13 @@ public class Pedido {
         return lineas.stream().mapToDouble(DetallePedido::getImporte).sum();
     }
 
-    @Override public String toString() {
-        return "Pedido{id=%d, clienteId=%d, fecha=%s, total=%.2f}"
-                .formatted(id, clienteId, fecha, getTotal());
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", clienteId=" + clienteId +
+                ", fecha=" + fecha +
+                ", idRepartidor=" + idRepartidor +
+                '}';
     }
 }

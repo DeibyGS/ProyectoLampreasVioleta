@@ -19,13 +19,13 @@ public class PedidoDAO {
     // ===============================
 
     private static final String INSERT_SQL =
-            "INSERT INTO pedido (id, cliente_id, fecha) VALUES (?, ?, ?)";
+            "INSERT INTO pedido (id, cliente_id, fecha, id_repartidor) VALUES (?, ?, ?,?)";
 
     private static final String SELECT_BY_ID_SQL =
-            "SELECT id, cliente_id, fecha FROM lpedido WHERE id = ?";
+            "SELECT id, cliente_id, fecha FROM pedido WHERE id = ?";
 
     private static final String SELECT_ALL_SQL =
-            "SELECT id, cliente_id, fecha FROM pedido ORDER BY id";
+            "SELECT id, cliente_id, fecha, id_repartidor FROM pedido ORDER BY id";
 
     // ===============================
     // CRUD BÁSICO
@@ -38,6 +38,7 @@ public class PedidoDAO {
             pst.setInt(1, p.getId());
             pst.setInt(2, p.getClienteId());
             pst.setDate(3, Date.valueOf(p.getFecha()));
+            pst.setInt(4, p.getIdRepartidor());
 
             pst.executeUpdate();
         }
@@ -81,7 +82,8 @@ public class PedidoDAO {
         return new Pedido(
                 rs.getInt("id"),
                 rs.getInt("cliente_id"),
-                rs.getDate("fecha").toLocalDate()
+                rs.getDate("fecha").toLocalDate(),
+                rs.getInt("id_repartidor")
         );
     }
 }
