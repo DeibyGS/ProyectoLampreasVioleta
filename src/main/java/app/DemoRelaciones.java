@@ -2,6 +2,7 @@ package app;
 
 import dao.*;
 import model.*;
+import services.JacksonExport;
 import services.JsonIO;
 import utils.InputUtils;
 
@@ -87,6 +88,9 @@ public class DemoRelaciones {
                         case "23" -> exportarJson();
                         case "24" -> importarJson();
 
+                        // ---------------- JACKSON EXPORT  ------------
+                        case "25" -> exportarJackson();
+
                         case "0"  -> {
                             System.out.println("FIN.");
                             return;
@@ -152,6 +156,8 @@ public class DemoRelaciones {
         System.out.println(" 23  - Exportar BD a JSON");
         System.out.println(" 24  - Importar JSON a BD (INSERT en orden FK)");
         System.out.println();
+        System.out.println("JACKSON");
+        System.out.println(" 25  - Exportar BD a JSON usando Jacksom");
         System.out.println("  0  - Salir");
         System.out.println("=========================================");
     }
@@ -455,5 +461,32 @@ public class DemoRelaciones {
         }
 
         System.out.println("Importación finalizada.");
+    }
+
+    // =========================================================
+    // JACKSON EXPORT / IMPORT
+    // =========================================================
+
+
+    private static void exportarJackson() throws SQLException, IOException {
+        AppData data = new AppData();
+
+        //aca se exportan todos los modelos, pero solo se podria exportar solo uno o los que se deseara exportar
+        data.setClientes(clienteDAO.findAll());
+        data.setDetallesCliente(detalleClienteDAO.findAll());
+        data.setProductos(productoDAO.findAll());
+        data.setPedidos(pedidoDAO.findAll());
+        data.setDetallesPedido(detallePedidoDAO.findAll());
+        data.setRepartidores(repartidorDAO.findAll());
+        data.setComerciales(comercialDAO.findAll());
+
+        String rutaArchivo = System.getProperty("user.dir") + "/data/lampreasVioleta_jackson.json";
+
+
+
+
+        JacksonExport.exportToJson(data,rutaArchivo);
+
+        System.out.println("Exportado JSON en: " + rutaArchivo);
     }
 }
